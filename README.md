@@ -4,27 +4,33 @@
 - 📦 **项目结构**：清晰的文件目录说明
 - 🛠️ **部署教程**：详细的准备工作步骤
 
-### 🔄 版本更新指南（3 种方式）
+### 🔄 版本更新指南（最新逻辑）
 
-#### **方式 1️⃣：手动指定版本（推荐）** ⭐
-```
-1. GitHub → Actions → "Build and Publish Docker Image"
-2. 点击 "Run workflow" 按钮
-3. 输入版本号：
-   - Sing-box version: 1.10.9
-   - Cloudflared version: 2024.5.0
-4. 点击 "Run workflow" 确认
-5. 等待 5-10 分钟，自动构建完成
-```
+版本号统一放在 `versions.env` 中，Docker 构建时会：
+1. 先尝试通过 `scripts/update-versions.sh` 获取 GitHub 上最新稳定版（获取失败不会中断构建）
+2. 成功则用最新版本下载二进制；失败则回退使用 `versions.env` 中的版本号
 
-#### **方式 2️⃣：修改 Dockerfile（自动构建）**
+#### **方式 1️⃣：更新 versions.env（推荐）** ⭐
 ```
-1. 编辑 Dockerfile 中的版本号
-2. git push 自动触发构建
+1. 编辑 versions.env 里的版本号
+2. git push 触发构建（或本地 docker build）
 ```
 
-#### **方式 3️⃣：完全自动追踪**
-- 说明如何实现完全自动化追踪
+#### **方式 2️⃣：用脚本自动更新 versions.env**
+脚本会拉取最新稳定版，拉取成功才会覆盖 `versions.env`（失败不改文件）。
+
+在 WSL 或 Git Bash 中执行：
+```
+bash scripts/update-versions.sh
+```
+
+只查看将要更新到的版本号（不改文件）：
+```
+bash scripts/update-versions.sh --dry-run
+```
+
+#### **说明：为什么不在容器启动时更新**
+镜像生成后版本就已经确定，运行阶段不再依赖外部网络拉版本，启动更稳定、更可控。
 
 ### 🚀 部署指南
 - **Koyeb** 部署步骤
@@ -63,6 +69,8 @@
 - ✅ .github/workflows/build.yml
 - ✅ config.json
 - ✅ start.sh
+- ✅ versions.env
+- ✅ scripts/update-versions.sh
 - ✅ **README.md** ← 新增！
 
 ---

@@ -5,19 +5,12 @@ on:
     branches: [ "main" ]
     paths:
       - 'Dockerfile'
+      - 'versions.env'
+      - 'scripts/update-versions.sh'
       - 'config.json'
       - 'start.sh'
       - '.github/workflows/build.yml'
-  workflow_dispatch:
-    inputs:
-      sing_box_version:
-        description: 'Sing-box version (e.g., 1.10.1)'
-        required: true
-        default: '1.10.1'
-      cloudflared_version:
-        description: 'Cloudflared version (e.g., 2024.4.1)'
-        required: true
-        default: '2024.4.1'
+  workflow_dispatch: {}
 
 env:
   REGISTRY: ghcr.io
@@ -70,8 +63,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            SING_BOX_VERSION=${{ github.event.inputs.sing_box_version || '1.10.1' }}
-            CLOUDFLARED_VERSION=${{ github.event.inputs.cloudflared_version || '2024.4.1' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
