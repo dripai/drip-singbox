@@ -1,0 +1,39 @@
+# Git 相关
+.git
+.gitignore
+.github
+
+# 环境和密钥
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.key.pub
+secrets/
+
+# 文档
+README.md
+LICENSE
+*.md
+DOCS/
+docs/
+
+# 开发工具
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 构建产物
+dist/
+build/
+node_modules/
+
+# 安全扫描
+.trivyignore
+
+# CI/CD
+.github/
